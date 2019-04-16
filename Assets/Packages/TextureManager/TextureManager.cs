@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using UnityEngine.Events;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -46,6 +47,9 @@ public class TextureManager : MonoBehaviour, IInitializable
         #endregion Method
     }
 
+    [System.Serializable]
+    public class TextureDataEvent : UnityEvent<TextureData> { }
+
     #if UNITY_EDITOR
 
     [CustomPropertyDrawer(typeof(TextureData))]
@@ -76,14 +80,15 @@ public class TextureManager : MonoBehaviour, IInitializable
     [SerializeField]
     protected List<TextureData> textures;
 
+    public TextureDataEvent onTextureAdded;
+
+    public TextureDataEvent onTextureRemoved;
+
     #endregion Field
 
     #region Property
 
-    public bool IsInitialized
-    {
-        get; protected set;
-    }
+    public bool IsInitialized { get; protected set; }
 
     protected Dictionary<int, TextureData> _textures;
 
@@ -134,30 +139,41 @@ public class TextureManager : MonoBehaviour, IInitializable
         this.textures.Add(data);
         this._textures.Add(data.Hash, data);
 
+        this.onTextureAdded.Invoke(data);
+
         return true;
     }
 
-    public virtual TextureData GetRandomTexture(bool proportion = false)
+    public virtual bool RemoveTexture(TextureData data)
     {
-        if (proportion)
+        return this.RemoveTexture(data.Hash);
+    }
+
+    public virtual bool RemoveTexture(int hash)
+    {
+        if (!this._textures.ContainsKey(hash))
         {
-            float seedValue = Random.value;
-
-            foreach (var data in this._textures)
-            {
-                seedValue -= data.Value.proportion;
-
-                if (seedValue <= 0)
-                {
-                    return data.Value;
-                }
-            }
+            return false;
         }
 
-        // CAUTION:
-        // seedValue may keep it value more than 0.
+        var data = this._textures[hash];
 
-        return this._textures[this.textures[Random.Range(0, this.textures.Count)].Hash];
+        this.textures.Remove(data);
+        this._textures.Remove(hash);
+
+        this.onTextureRemoved.Invoke(data);
+
+        return true;
+    }
+
+    public TextureData Pick(int index)
+    {
+        return this.textures[index];
+    }
+
+    public TextureData RandomPick(bool withProportion = false)
+    {
+        return this.textures[Random.Range(0, this.textures.Count)];
     }
 
     #endregion Method
