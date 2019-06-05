@@ -8,7 +8,7 @@ public class TexturePickerTimeShift : TexturePicker
 
     public float shiftTimeSec = 30;
 
-    private float previousShiftTime = 0;
+    private float previousShiftTimeSec = 0;
 
     #endregion Field
 
@@ -25,18 +25,16 @@ public class TexturePickerTimeShift : TexturePicker
 
     protected virtual void Update()
     {
-        if (Time.timeSinceLevelLoad - this.previousShiftTime > this.shiftTimeSec)
+        if (Time.timeSinceLevelLoad - this.previousShiftTimeSec > this.shiftTimeSec)
         {
-            this.currentManagerIndex = (this.currentManagerIndex + 1)
-                                     % base.textureManagers.Length;
-
-            this.previousShiftTime = Time.timeSinceLevelLoad;
+            this.currentManagerIndex  = (this.currentManagerIndex + 1) % base.textureManagers.Length;
+            this.previousShiftTimeSec = Time.timeSinceLevelLoad;
         }
     }
 
-    public virtual TextureManager.TextureData Pick(bool withProportion = false)
+    public override TextureData RandomPick()
     {
-        return this.CurrentManager.RandomPick(withProportion);
+        return this.CurrentManager.RandomPick();
     }
 
     #endregion Method

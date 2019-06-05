@@ -44,15 +44,15 @@ public class TexturePicker : MonoBehaviour, IInitializable
         return true;
     }
 
-    public virtual TextureManager.TextureData Pick(int index, bool withProportion = false)
+    public virtual TextureData Pick(int managerIndex, int textureIndex)
     {
-        return this.textureManagers[index].RandomPick(withProportion);
+        return this.textureManagers[managerIndex].Pick(textureIndex);
     }
 
-    public virtual TextureManager.TextureData RandomPick(bool withProportion = false)
+    public virtual TextureData RandomPick()
     {
-        return this.textureManagers[Random.Range(0, this.textureManagers.Length)]
-                   .RandomPick(withProportion);
+        return this.textureManagers
+        [Random.Range(0, this.textureManagers.Length)].RandomPick();
     }
 
     #endregion Method

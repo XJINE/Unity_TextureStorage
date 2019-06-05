@@ -1,80 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
-using UnityEngine.Events;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 public class TextureManager : MonoBehaviour, IInitializable
 {
-    #region Class
-
-    [System.Serializable]
-    public class TextureData
-    {
-        #region Field
-
-        public float proportion;
-
-        public Texture2D texture;
-
-        #endregion Field
-
-        #region Property
-
-        public int Hash { get { return this.texture.name.GetHashCode(); } }
-
-        #endregion Property
-
-        #region Constructor
-
-        public TextureData(float proportion, Texture2D texture)
-        {
-            this.proportion = proportion;
-            this.texture    = texture;
-        }
-
-        #endregion Constructor
-
-        #region Method
-
-        public override string ToString()
-        {
-            return this.proportion + " : " + this.texture.name + " (" + this.Hash + ")";
-        }
-
-        #endregion Method
-    }
-
-    [System.Serializable]
-    public class TextureDataEvent : UnityEvent<TextureData> { }
-
-    #if UNITY_EDITOR
-
-    [CustomPropertyDrawer(typeof(TextureData))]
-    public class TextureDataDrawer : PropertyDrawer
-    {
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            EditorGUI.BeginProperty(position, label, property);
-
-            position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
-
-            Rect proportionRect = new Rect(position.xMin,       position.y, position.width / 2, position.height);
-            Rect textureRect    = new Rect(proportionRect.xMax, position.y, position.width / 2, position.height);
-
-            EditorGUI.PropertyField(proportionRect, property.FindPropertyRelative("proportion"), GUIContent.none);
-            EditorGUI.PropertyField(textureRect,    property.FindPropertyRelative("texture"),    GUIContent.none);
-
-            EditorGUI.EndProperty();
-        }
-    }
-
-    #endif // UNITY_EDITOR
-
-    #endregion Class
-
     #region Field
 
     [SerializeField]
@@ -90,9 +19,9 @@ public class TextureManager : MonoBehaviour, IInitializable
 
     public bool IsInitialized { get; protected set; }
 
-    protected Dictionary<int, TextureData> _textures;
+    protected Dictionary<string, TextureData> _textures;
 
-    public ReadOnlyDictionary<int, TextureData> Textures
+    public ReadOnlyDictionary<string, TextureData> Textures
     {
         get; protected set;
     }
@@ -115,29 +44,29 @@ public class TextureManager : MonoBehaviour, IInitializable
 
         this.IsInitialized = true;
 
-        this._textures = new Dictionary<int, TextureData>();
+        this._textures = new Dictionary<string, TextureData>();
 
-        this.Textures = new ReadOnlyDictionary<int, TextureData>(this._textures);
+        this.Textures = new ReadOnlyDictionary<string, TextureData>(this._textures);
 
         foreach (TextureData texture in this.textures)
         {
-            this._textures.Add(texture.Hash, texture);
+            this._textures.Add(texture.Name, texture);
         }
 
         return true;
     }
 
-    public virtual bool AddTexture(float proportion, Texture2D texture)
+    public virtual bool AddTexture(Texture2D texture)
     {
-        var data = new TextureData(proportion, texture);
+        var data = new TextureData(texture);
 
-        if (this._textures.ContainsKey(data.Hash))
+        if (this._textures.ContainsKey(data.Name))
         {
             return false;
         }
 
         this.textures.Add(data);
-        this._textures.Add(data.Hash, data);
+        this._textures.Add(data.Name, data);
 
         this.onTextureAdded.Invoke(data);
 
@@ -146,20 +75,20 @@ public class TextureManager : MonoBehaviour, IInitializable
 
     public virtual bool RemoveTexture(TextureData data)
     {
-        return this.RemoveTexture(data.Hash);
+        return this.RemoveTexture(data.Name);
     }
 
-    public virtual bool RemoveTexture(int hash)
+    public virtual bool RemoveTexture(string name)
     {
-        if (!this._textures.ContainsKey(hash))
+        if (!this._textures.ContainsKey(name))
         {
             return false;
         }
 
-        var data = this._textures[hash];
+        var data = this._textures[name];
 
         this.textures.Remove(data);
-        this._textures.Remove(hash);
+        this._textures.Remove(name);
 
         this.onTextureRemoved.Invoke(data);
 
@@ -171,7 +100,7 @@ public class TextureManager : MonoBehaviour, IInitializable
         return this.textures[index];
     }
 
-    public TextureData RandomPick(bool withProportion = false)
+    public TextureData RandomPick()
     {
         return this.textures[Random.Range(0, this.textures.Count)];
     }
