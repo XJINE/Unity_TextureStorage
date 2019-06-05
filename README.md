@@ -12,12 +12,11 @@ Because of the ``GetHashCode()`` in .Net is not guarantee the return value is un
 In another Apps or with another version .Net, it may return another value.
 
 - Reference
--- https://docs.microsoft.com/ja-jp/dotnet/api/system.string.gethashcode?view=netframework-4.8
+    - https://docs.microsoft.com/ja-jp/dotnet/api/system.string.gethashcode?view=netframework-4.8
 
 ### Limitation
 
 Texture name is must be unique because Manager manages with the name.
-
 This is a quite important limitation to sync with another apps.
 
 ## Import to Your Project
