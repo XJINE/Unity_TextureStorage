@@ -18,6 +18,27 @@ public class TexturePicker : MonoBehaviour, IInitializable
 
     #endregion Property
 
+    #region Indexer
+
+    public TextureData this [string name]
+    {
+        get
+        {
+            foreach (TextureManager manager in this.textureManagers)
+            {
+                if (manager.Textures.ContainsKey(name))
+                {
+                    return manager.Textures[name];
+                }
+            }
+
+            throw new System.Collections.Generic.KeyNotFoundException
+            (name + " is not found in all of the managers.");
+        }
+    }
+
+    #endregion Indexer
+
     #region Method
 
     protected virtual void Awake()

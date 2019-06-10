@@ -273,6 +273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1930089555}
   - component: {fileID: 1930089556}
+  - component: {fileID: 1930089557}
   - component: {fileID: 1930089554}
   m_Layer: 0
   m_Name: TextureManager
@@ -293,7 +294,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc412d2e57dd06d48b1883c15bdb7f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textureManager: {fileID: 1930089556}
 --- !u!4 &1930089555
 Transform:
   m_ObjectHideFlags: 0
@@ -321,9 +321,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textures:
-  - proportion: 0.3333
-    texture: {fileID: 2800000, guid: 0c7484b559d0987498265a70886e7b1d, type: 3}
-  - proportion: 0.3333
-    texture: {fileID: 2800000, guid: c8e3d8754565ddf42952373244212525, type: 3}
-  - proportion: 0.3333
-    texture: {fileID: 2800000, guid: d51d1a7736328224c9b86cb91f88d622, type: 3}
+  - texture: {fileID: 2800000, guid: 0c7484b559d0987498265a70886e7b1d, type: 3}
+    meta: {x: 0.4, y: 1, z: 2, w: 3}
+  - texture: {fileID: 2800000, guid: c8e3d8754565ddf42952373244212525, type: 3}
+    meta: {x: 0.2, y: 2, z: 3, w: 1}
+  - texture: {fileID: 2800000, guid: d51d1a7736328224c9b86cb91f88d622, type: 3}
+    meta: {x: 0.2, y: 3, z: 1, w: 2}
+  onTextureAdded:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: TextureDataEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  onTextureRemoved:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: TextureDataEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+--- !u!114 &1930089557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1930089553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 637f4da3aa6b517478989e072a83fcd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textureManagers:
+  - {fileID: 1930089556}
