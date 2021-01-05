@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnityEngine;
 
 public class TextureManager : MonoBehaviour, IInitializable
@@ -19,9 +18,9 @@ public class TextureManager : MonoBehaviour, IInitializable
 
     public bool IsInitialized { get; protected set; }
 
-    protected Dictionary<string, TextureData> _textures;
+    protected List<TextureData> _Textures;
 
-    public ReadOnlyDictionary<string, TextureData> Textures
+    public IReadOnlyList<TextureData> Textures
     {
         get; protected set;
     }
@@ -44,13 +43,13 @@ public class TextureManager : MonoBehaviour, IInitializable
 
         this.IsInitialized = true;
 
-        this._textures = new Dictionary<string, TextureData>();
+        this._Textures = new List<TextureData>();
 
-        this.Textures = new ReadOnlyDictionary<string, TextureData>(this._textures);
+        this.Textures = this._Textures.AsReadOnly();
 
         foreach (TextureData texture in this.textures)
         {
-            this._textures.Add(texture.Name, texture);
+            this._Textures.Add(texture);
         }
 
         return true;
@@ -60,13 +59,8 @@ public class TextureManager : MonoBehaviour, IInitializable
     {
         var data = new TextureData(texture);
 
-        if (this._textures.ContainsKey(data.Name))
-        {
-            return false;
-        }
-
         this.textures.Add(data);
-        this._textures.Add(data.Name, data);
+        this._Textures.Add(data);
 
         this.onTextureAdded.Invoke(data);
 
@@ -75,34 +69,17 @@ public class TextureManager : MonoBehaviour, IInitializable
 
     public virtual bool RemoveTexture(TextureData data)
     {
-        return this.RemoveTexture(data.Name);
-    }
-
-    public virtual bool RemoveTexture(string name)
-    {
-        if (!this._textures.ContainsKey(name))
+        if (!this._Textures.Contains(data))
         {
             return false;
         }
 
-        var data = this._textures[name];
-
         this.textures.Remove(data);
-        this._textures.Remove(name);
+        this._Textures.Remove(data);
 
         this.onTextureRemoved.Invoke(data);
 
         return true;
-    }
-
-    public TextureData Pick(int index)
-    {
-        return this.textures[index];
-    }
-
-    public TextureData RandomPick()
-    {
-        return this.textures[Random.Range(0, this.textures.Count)];
     }
 
     #endregion Method

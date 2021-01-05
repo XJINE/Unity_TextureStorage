@@ -1,79 +1,29 @@
 ﻿using UnityEngine;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Linq;
 
-public class TexturePicker : MonoBehaviour, IInitializable
+public static class TexturePicker
 {
-    #region Field
-
-    [SerializeField]
-    protected TextureManager[] textureManagers;
-
-    #endregion Field
-
-    #region Property
-
-    public bool IsInitialized { get; protected set; }
-
-    public ReadOnlyCollection<TextureManager> TextureManagers { get; protected set; }
-
-    #endregion Property
-
-    #region Indexer
-
-    public TextureData this [string name]
-    {
-        get
-        {
-            foreach (TextureManager manager in this.textureManagers)
-            {
-                if (manager.Textures.ContainsKey(name))
-                {
-                    return manager.Textures[name];
-                }
-            }
-
-            throw new System.Collections.Generic.KeyNotFoundException
-            (name + " is not found in all of the managers.");
-        }
-    }
-
-    #endregion Indexer
-
     #region Method
 
-    protected virtual void Awake()
+    public static TextureData Pick(TextureManager manager, int index)
     {
-        Initialize();
+        return manager.Textures[index];
     }
 
-    public virtual bool Initialize()
+    public static TextureData First(TextureManager manager, string name)
     {
-        if (this.IsInitialized)
-        {
-            return false;
-        }
-
-        this.IsInitialized = true;
-
-        this.TextureManagers = new ReadOnlyCollection<TextureManager>(this.textureManagers);
-
-        foreach (TextureManager manager in this.textureManagers)
-        {
-            manager.Initialize();
-        }
-
-        return true;
+        return manager.Textures.First(texture => texture.Name == name);
     }
 
-    public virtual TextureData Pick(int managerIndex, int textureIndex)
+    public static TextureData RandomPick(TextureManager manager)
     {
-        return this.textureManagers[managerIndex].Pick(textureIndex);
+        return manager.Textures[Random.Range(0, manager.Textures.Count)];
     }
 
-    public virtual TextureData RandomPick()
+    public static TextureData RandomPick(IList<TextureManager> managers)
     {
-        return this.textureManagers
-        [Random.Range(0, this.textureManagers.Length)].RandomPick();
+        return RandomPick(managers[Random.Range(0, managers.Count)]);
     }
 
     #endregion Method

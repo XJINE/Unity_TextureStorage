@@ -5,7 +5,6 @@ public class Sample : MonoBehaviour
     #region Field
 
     private TextureManager textureManager;
-    private TexturePicker  texturePicker;
     private TextureData    pickedTexture;
 
     #endregion Field
@@ -14,30 +13,30 @@ public class Sample : MonoBehaviour
 
     private void Awake()
     {
-        this.textureManager = base.GetComponent<TextureManager>();
-        this.texturePicker  = base.GetComponent<TexturePicker>();
-        this.pickedTexture  = this.texturePicker.RandomPick();
+        textureManager = GetComponent<TextureManager>();
+        textureManager.Initialize();
+        pickedTexture  = TexturePicker.RandomPick(textureManager);
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            this.pickedTexture = this.textureManager.RandomPick(true);
+            pickedTexture = TexturePicker.RandomPick(textureManager);
         }
     }
 
     private void OnGUI()
     {
-        this.textureManager.Initialize();
+        textureManager.Initialize();
 
-        foreach (var data in this.textureManager.Textures)
+        foreach (var data in textureManager.Textures)
         {
-            GUILayout.Label(data.Value.ToString());
+            GUILayout.Label(data.ToString());
         }
 
         GUILayout.Label("Press Return to pick random texture with priority.");
-        GUILayout.Label("- " + this.pickedTexture.ToString());
+        GUILayout.Label("- " + pickedTexture.ToString());
     }
 
     #endregion Method
