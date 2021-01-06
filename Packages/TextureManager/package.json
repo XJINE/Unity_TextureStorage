@@ -1,0 +1,14 @@
+{
+  "name": "xjine.texturemanager",
+  "displayName": "Texture Manager",
+  "version": "1.0.0",
+  "author": {
+    "name": "XJINE"
+  },
+  "type": "library",
+  "hideInEditor": false,
+  "description": "TextureManager provides simple functions to manager texture with 4 meta data.",
+  "dependencies": {
+    "xjine.iinitializable": "https://github.com/XJINE/Unity_IInitializable.git?path=/Packages/IInitializable"
+  }
+}

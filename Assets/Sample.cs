@@ -15,7 +15,8 @@ public class Sample : MonoBehaviour
     {
         textureManager = GetComponent<TextureManager>();
         textureManager.Initialize();
-        pickedTexture  = TexturePicker.RandomPick(textureManager);
+
+        pickedTexture = TexturePicker.RandomPick(textureManager);
     }
 
     private void Update()
@@ -30,13 +31,15 @@ public class Sample : MonoBehaviour
     {
         textureManager.Initialize();
 
+        GUILayout.Label("Managed Textures : ");
+
         foreach (var data in textureManager.Textures)
         {
             GUILayout.Label(data.ToString());
         }
 
-        GUILayout.Label("Press Return to pick random texture with priority.");
-        GUILayout.Label("- " + pickedTexture.ToString());
+        GUILayout.Label("Press Return to pick random texture.");
+        GUILayout.Label("Picked Texture : " + pickedTexture.ToString());
     }
 
     #endregion Method
