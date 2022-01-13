@@ -10,14 +10,13 @@ public class TextureData
     #region Field
 
     public Texture2D texture;
-
-    public Vector4 meta;
+    public Vector4   meta;
 
     #endregion Field
 
     #region Property
 
-    public string Name { get { return this.texture.name; } }
+    public string Name => texture.name;
 
     #endregion Property
 
@@ -25,12 +24,13 @@ public class TextureData
 
     public TextureData(Texture2D texture)
     {
-        this.texture  = texture;
+        this.texture = texture;
     }
 
     public TextureData(Texture2D texture, Vector4 meta)
     {
-        this.texture  = texture;
+        this.texture = texture;
+        this.meta    = meta;
     }
 
     #endregion Constructor
@@ -39,7 +39,7 @@ public class TextureData
 
     public override string ToString()
     {
-        return this.Name + ", "  + this.meta.ToString();
+        return Name + ", "  + meta;
     }
 
     #endregion Method
@@ -59,17 +59,17 @@ public class TextureDataDrawer : PropertyDrawer
 
         position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
 
-        float height = position.height / 2;
-        float metaW  = position.width  / 4;
-        float metaY  = position.y + height;
+        var height = position.height / 2f;
+        var metaW  = position.width  / 4f;
+        var metaY  = position.y + height;
 
-        Rect texRect   = new Rect(position.xMin, position.y, position.width, height);
-        Rect metaRectX = new Rect(position.xMin + metaW * 0, metaY, metaW, height);
-        Rect metaRectY = new Rect(position.xMin + metaW * 1, metaY, metaW, height);
-        Rect metaRectZ = new Rect(position.xMin + metaW * 2, metaY, metaW, height);
-        Rect metaRectW = new Rect(position.xMin + metaW * 3, metaY, metaW, height);
+        var texRect   = new Rect(position.xMin, position.y, position.width, height);
+        var metaRectX = new Rect(position.xMin + metaW * 0, metaY, metaW, height);
+        var metaRectY = new Rect(position.xMin + metaW * 1, metaY, metaW, height);
+        var metaRectZ = new Rect(position.xMin + metaW * 2, metaY, metaW, height);
+        var metaRectW = new Rect(position.xMin + metaW * 3, metaY, metaW, height);
 
-        int prevIndentLevel = EditorGUI.indentLevel;
+        var prevIndentLevel = EditorGUI.indentLevel;
 
         EditorGUI.indentLevel = 0;
 
