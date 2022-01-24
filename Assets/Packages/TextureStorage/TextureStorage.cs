@@ -10,8 +10,7 @@ public class TextureStorage : MonoBehaviour, IInitializable
 {
     #region Field
 
-    [SerializeField]
-    protected List<TextureData> textures;
+    [SerializeField] protected List<TextureData> textures;
 
     public TextureDataEvent onTextureAdded;
     public TextureDataEvent onTextureRemoved;
@@ -79,13 +78,14 @@ public class TextureStorage : MonoBehaviour, IInitializable
 }
 
 #if UNITY_EDITOR
-[CustomEditor(typeof(TextureStorage))]
+[CustomEditor(typeof(TextureStorage), true)]
 public class TextureStorageEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
+        var textureStorage   = target as TextureStorage;
         var texturesProperty = serializedObject.FindProperty("textures");
 
         EditorGUILayout.PropertyField(texturesProperty);
@@ -93,10 +93,8 @@ public class TextureStorageEditor : Editor
         var rect = GUILayoutUtility.GetLastRect();
         DropArea(rect, (droppedObject) =>
         {
-            var texture        = droppedObject as Texture2D;
-            var textureStorage = target        as TextureStorage;
-
-            if (texture == null || textureStorage == null)
+            var texture = droppedObject as Texture2D;
+            if (texture == null)
             {
                 return;
             }
